@@ -121,7 +121,7 @@ print 'Downloading MQTT-Explorer...'
 TEMP_DIR=$(mktemp -d)
 #https://github.com/thomasnordquist/MQTT-Explorer/releases/download/0.0.0-0.4.0-beta1/MQTT-Explorer-0.4.0-beta1.AppImage
 wget -qnv --show-progress -O ${TEMP_DIR}/MQTT-Explorer.AppImage https://github.com/thomasnordquist/MQTT-Explorer/releases/download/v${RELEASE_VERSION}/MQTT-Explorer-${RELEASE_VERSION}.AppImage
-wget -qnv --show-progress -O ${TEMP_DIR}/MQTT-Explorer.png https://joplinapp.org/images/Icon512.png
+wget -qnv --show-progress -O ${TEMP_DIR}/MQTT-Explorer.png https://github.com/thomasnordquist/MQTT-Explorer/raw/master/icon.png
 
 #-----------------------------------------------------
 print 'Installing MQTT-Explorer...'
