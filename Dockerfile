@@ -6,12 +6,12 @@ RUN mkdir /app && chown appuser -Rfv /app
 USER appuser
 RUN echo $USER
 WORKDIR /app
-RUN wget -O - https://raw.githubusercontent.com/CatalinGB/docker-MQTT-Explorer/master/MQTT-Explorer_install_and_update.sh >/app/install-MQTT-Explorer.sh && chmod +x /app/install-MQTT-Explorer.sh
-RUN TERM=xterm /app/install-MQTT-Explorer.sh --allow-root --force
-RUN /app/.MQTT-Explorer/MQTT-Explorer.AppImage --appimage-extract
+RUN wget -O - https://raw.githubusercontent.com/CatalinGB/docker-Obsidianmd/master/Obsidianmd_install_and_update.sh >/app/install-Obsidianmd.sh && chmod +x /app/install-Obsidianmd.sh
+RUN TERM=xterm /app/install-Obsidianmd.sh --allow-root --force
+RUN /app/.Obsidianmd/Obsidianmd.AppImage --appimage-extract
 ENV APPDIR=/app/squashfs-root
 ADD startapp.sh /startapp.sh
 USER root
-ADD https://github.com/thomasnordquist/MQTT-Explorer/raw/master/icon.png /app/MQTT-Explorer-logo.png
-RUN APP_ICON_URL=file:///app/MQTT-Explorer-logo.png && install_app_icon.sh "$APP_ICON_URL"
-ENV APP_NAME="MQTT-Explorer"
+ADD https://forum.obsidian.md/uploads/default/original/2X/7/7d2b71c58ded80e1dd507918089f582286b3540d.png /app/Obsidianmd-logo.png
+RUN APP_ICON_URL=file:///app/Obsidianmd-logo.png && install_app_icon.sh "$APP_ICON_URL"
+ENV APP_NAME="Obsidianmd"
