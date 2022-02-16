@@ -89,60 +89,59 @@ ARCHITECTURE=$(uname -m -p -i || echo "NO CHECK")
 if [[ $ARCHITECTURE = "NO CHECK" ]] ; then
   print "${COLOR_YELLOW}WARNING: Can't get system architecture, skipping check${COLOR_RESET}"
 elif [[ $ARCHITECTURE =~ .*aarch.*|.*arm.* ]] ; then
-  showHelp "Arm systems are not officially supported by MQTT-Explorer, please search the forum (https://discourse.MQTT-Explorerapp.org/) for more information"
+  showHelp "Arm systems are not officially supported by Obsidianmd, please search the forum (https://discourse.Obsidianmdapp.org/) for more information"
   exit 1
 elif [[ $ARCHITECTURE =~ .*i386.*|.*i686.* ]] ; then
-  showHelp "32-bit systems are not supported by MQTT-Explorer, please search the forum (https://discourse.MQTT-Explorerapp.org/) for more information"
+  showHelp "32-bit systems are not supported by Obsidianmd, please search the forum (https://discourse.Obsidianmdapp.org/) for more information"
   exit 1
 fi
 
 #-----------------------------------------------------
-# Download MQTT-Explorer
+# Download Obsidianmd
 #-----------------------------------------------------
 
 # Get the latest version to download
 if [[ "$INCLUDE_PRE_RELEASE" == true ]]; then
-  RELEASE_VERSION=$(wget -qO - "https://api.github.com/repos/thomasnordquist/MQTT-Explorer/releases" | grep -Po '"tag_name": ?"v\K.*?(?=")' | head -1)
+  RELEASE_VERSION=$(wget -qO - "https://api.github.com/repos/obsidianmd/obsidian-releases/releases" | grep -Po '"tag_name": ?"v\K.*?(?=")' | head -1)
 else
-  RELEASE_VERSION=$(wget -qO - "https://api.github.com/repos/thomasnordquist/MQTT-Explorer/releases/latest" | grep -Po '"tag_name": ?"v\K.*?(?=")')
+  RELEASE_VERSION=$(wget -qO - "https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest" | grep -Po '"tag_name": ?"v\K.*?(?=")')
 fi
 
 # Check if it's in the latest version
-if [[ -e ~/.MQTT-Explorer/VERSION ]] && [[ $(< ~/.MQTT-Explorer/VERSION) == "${RELEASE_VERSION}" ]]; then
+if [[ -e ~/.Obsidianmd/VERSION ]] && [[ $(< ~/.Obsidianmd/VERSION) == "${RELEASE_VERSION}" ]]; then
     print "${COLOR_GREEN}You already have the latest version${COLOR_RESET} ${RELEASE_VERSION} ${COLOR_GREEN}installed.${COLOR_RESET}"
     ([[ "$FORCE" == true ]] && print "Forcing installation...") || exit 0
 else
-    [[ -e ~/.MQTT-Explorer/VERSION ]] && CURRENT_VERSION=$(< ~/.MQTT-Explorer/VERSION)
+    [[ -e ~/.Obsidianmd/VERSION ]] && CURRENT_VERSION=$(< ~/.Obsidianmd/VERSION)
     print "The latest version is ${RELEASE_VERSION}, but you have ${CURRENT_VERSION:-no version} installed."
 fi
 
 #-----------------------------------------------------
-print 'Downloading MQTT-Explorer...'
+print 'Downloading Obsidianmd...'
 TEMP_DIR=$(mktemp -d)
-#https://github.com/thomasnordquist/MQTT-Explorer/releases/download/0.0.0-0.4.0-beta1/MQTT-Explorer-0.4.0-beta1.AppImage
-wget -qnv --show-progress -O ${TEMP_DIR}/MQTT-Explorer.AppImage https://github.com/thomasnordquist/MQTT-Explorer/releases/download/v${RELEASE_VERSION}/MQTT-Explorer-${RELEASE_VERSION}.AppImage
-wget -qnv --show-progress -O ${TEMP_DIR}/MQTT-Explorer.png https://github.com/thomasnordquist/MQTT-Explorer/raw/master/icon.png
+wget -qnv --show-progress -O ${TEMP_DIR}/Obsidianmd.AppImage https://github.com/obsidianmd/obsidian-releases/releases/download/v${RELEASE_VERSION}/Obsidianmd-${RELEASE_VERSION}.AppImage
+wget -qnv --show-progress -O ${TEMP_DIR}/Obsidianmd.png https://forum.obsidian.md/uploads/default/original/2X/7/7d2b71c58ded80e1dd507918089f582286b3540d.png
 
 #-----------------------------------------------------
-print 'Installing MQTT-Explorer...'
-# Delete previous version (in future versions MQTT-Explorer.desktop shouldn't exist)
-rm -f ~/.MQTT-Explorer/*.AppImage ~/.local/share/applications/MQTT-Explorer.desktop ~/.MQTT-Explorer/VERSION
+print 'Installing Obsidianmd...'
+# Delete previous version (in future versions Obsidianmd.desktop shouldn't exist)
+rm -f ~/.Obsidianmd/*.AppImage ~/.local/share/applications/Obsidianmd.desktop ~/.Obsidianmd/VERSION
 
 # Creates the folder where the binary will be stored
-mkdir -p ~/.MQTT-Explorer/
+mkdir -p ~/.Obsidianmd/
 
 # Download the latest version
-mv ${TEMP_DIR}/MQTT-Explorer.AppImage ~/.MQTT-Explorer/MQTT-Explorer.AppImage
+mv ${TEMP_DIR}/Obsidianmd.AppImage ~/.Obsidianmd/Obsidianmd.AppImage
 
 # Gives execution privileges
-chmod +x ~/.MQTT-Explorer/MQTT-Explorer.AppImage
+chmod +x ~/.Obsidianmd/Obsidianmd.AppImage
 
 print "${COLOR_GREEN}OK${COLOR_RESET}"
 
 #-----------------------------------------------------
 print 'Installing icon...'
 mkdir -p ~/.local/share/icons/hicolor/512x512/apps
-mv ${TEMP_DIR}/MQTT-Explorer.png ~/.local/share/icons/hicolor/512x512/apps/MQTT-Explorer.png
+mv ${TEMP_DIR}/Obsidianmd.png ~/.local/share/icons/hicolor/512x512/apps/Obsidianmd.png
 print "${COLOR_GREEN}OK${COLOR_RESET}"
 
 # Detect desktop environment
@@ -161,15 +160,15 @@ then
     : "${TMPDIR:=$TEMP_DIR}"
     # This command extracts to squashfs-root by default and can't be changed...
     # So we run it in the tmp directory and clean up after ourselves
-    (cd $TMPDIR && ~/.MQTT-Explorer/MQTT-Explorer.AppImage --appimage-extract MQTT-Explorer.desktop &> /dev/null)
-    APPIMAGE_VERSION=$(grep "^X-AppImage-Version=" $TMPDIR/squashfs-root/MQTT-Explorer.desktop | head -n 1 | cut -d "=" -f 2)
+    (cd $TMPDIR && ~/.Obsidianmd/Obsidianmd.AppImage --appimage-extract Obsidianmd.desktop &> /dev/null)
+    APPIMAGE_VERSION=$(grep "^X-AppImage-Version=" $TMPDIR/squashfs-root/Obsidianmd.desktop | head -n 1 | cut -d "=" -f 2)
     rm -rf $TMPDIR/squashfs-root
     # Only delete the desktop file if it will be replaced
-    rm -f ~/.local/share/applications/appimagekit-MQTT-Explorer.desktop
+    rm -f ~/.local/share/applications/appimagekit-Obsidianmd.desktop
 
     # On some systems this directory doesn't exist by default
     mkdir -p ~/.local/share/applications
-    echo -e "[Desktop Entry]\nEncoding=UTF-8\nName=MQTT-Explorer\nComment=MQTT-Explorer for Desktop\nExec=${HOME}/.MQTT-Explorer/MQTT-Explorer.AppImage\nIcon=MQTT-Explorer\nStartupWMClass=MQTT-Explorer\nType=Application\nCategories=Office;\n#${APPIMAGE_VERSION}" >> ~/.local/share/applications/appimagekit-MQTT-Explorer.desktop
+    echo -e "[Desktop Entry]\nEncoding=UTF-8\nName=Obsidianmd\nComment=Obsidianmd for Desktop\nExec=${HOME}/.Obsidianmd/Obsidianmd.AppImage\nIcon=Obsidianmd\nStartupWMClass=Obsidianmd\nType=Application\nCategories=Office;\n#${APPIMAGE_VERSION}" >> ~/.local/share/applications/appimagekit-Obsidianmd.desktop
     # Update application icons
     [[ `command -v update-desktop-database` ]] && update-desktop-database ~/.local/share/applications && update-desktop-database ~/.local/share/icons
     print "${COLOR_GREEN}OK${COLOR_RESET}"
@@ -182,14 +181,14 @@ fi
 #-----------------------------------------------------
 
 # Informs the user that it has been installed
-print "${COLOR_GREEN}MQTT-Explorer version${COLOR_RESET} ${RELEASE_VERSION} ${COLOR_GREEN}installed.${COLOR_RESET}"
+print "${COLOR_GREEN}Obsidianmd version${COLOR_RESET} ${RELEASE_VERSION} ${COLOR_GREEN}installed.${COLOR_RESET}"
 
 # Record version
-echo $RELEASE_VERSION > ~/.MQTT-Explorer/VERSION
+echo $RELEASE_VERSION > ~/.Obsidianmd/VERSION
 
 #-----------------------------------------------------
 if [[ "$SHOW_CHANGELOG" == true ]]; then
-    NOTES=$(wget -qO - https://api.github.com/repos/thomasnordquist/MQTT-Explorer/releases/latest | grep -Po '"body": "\K.*(?=")')
+    NOTES=$(wget -qO - https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest | grep -Po '"body": "\K.*(?=")')
     print "${COLOR_BLUE}Changelog:${COLOR_RESET}\n${NOTES}"
 fi
 
