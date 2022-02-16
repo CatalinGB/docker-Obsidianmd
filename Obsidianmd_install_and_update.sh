@@ -22,7 +22,7 @@ print() {
 
 showLogo() {
     print "${COLOR_BLUE}"
-    print "MQTT explorer"
+    print "Obsidian.md"
     print "Linux Installer and Updater"
     print "${COLOR_RESET}"
 }
@@ -89,15 +89,15 @@ ARCHITECTURE=$(uname -m -p -i || echo "NO CHECK")
 if [[ $ARCHITECTURE = "NO CHECK" ]] ; then
   print "${COLOR_YELLOW}WARNING: Can't get system architecture, skipping check${COLOR_RESET}"
 elif [[ $ARCHITECTURE =~ .*aarch.*|.*arm.* ]] ; then
-  showHelp "Arm systems are not officially supported by Obsidianmd, please search the forum (https://discourse.Obsidianmdapp.org/) for more information"
+  showHelp "Arm systems are not officially supported by Obsidian, please search the forum (https://discourse.Obsidianapp.org/) for more information"
   exit 1
 elif [[ $ARCHITECTURE =~ .*i386.*|.*i686.* ]] ; then
-  showHelp "32-bit systems are not supported by Obsidianmd, please search the forum (https://discourse.Obsidianmdapp.org/) for more information"
+  showHelp "32-bit systems are not supported by Obsidian, please search the forum (https://discourse.Obsidianapp.org/) for more information"
   exit 1
 fi
 
 #-----------------------------------------------------
-# Download Obsidianmd
+# Download Obsidian
 #-----------------------------------------------------
 
 # Get the latest version to download
@@ -108,40 +108,42 @@ else
 fi
 
 # Check if it's in the latest version
-if [[ -e ~/.Obsidianmd/VERSION ]] && [[ $(< ~/.Obsidianmd/VERSION) == "${RELEASE_VERSION}" ]]; then
+if [[ -e ~/.Obsidian/VERSION ]] && [[ $(< ~/.Obsidian/VERSION) == "${RELEASE_VERSION}" ]]; then
     print "${COLOR_GREEN}You already have the latest version${COLOR_RESET} ${RELEASE_VERSION} ${COLOR_GREEN}installed.${COLOR_RESET}"
     ([[ "$FORCE" == true ]] && print "Forcing installation...") || exit 0
 else
-    [[ -e ~/.Obsidianmd/VERSION ]] && CURRENT_VERSION=$(< ~/.Obsidianmd/VERSION)
+    [[ -e ~/.Obsidian/VERSION ]] && CURRENT_VERSION=$(< ~/.Obsidian/VERSION)
     print "The latest version is ${RELEASE_VERSION}, but you have ${CURRENT_VERSION:-no version} installed."
 fi
 
 #-----------------------------------------------------
-print 'Downloading Obsidianmd...'
+print 'Downloading Obsidian...'
 TEMP_DIR=$(mktemp -d)
-wget -qnv --show-progress -O ${TEMP_DIR}/Obsidianmd.AppImage https://github.com/obsidianmd/obsidian-releases/releases/download/v${RELEASE_VERSION}/Obsidianmd-${RELEASE_VERSION}.AppImage
-wget -qnv --show-progress -O ${TEMP_DIR}/Obsidianmd.png https://forum.obsidian.md/uploads/default/original/2X/7/7d2b71c58ded80e1dd507918089f582286b3540d.png
+echo ${RELEASE_VERSION}
+echo https://github.com/obsidianmd/obsidian-releases/releases/download/v${RELEASE_VERSION}/Obsidian-${RELEASE_VERSION}.AppImage
+wget -qnv --show-progress -O ${TEMP_DIR}/Obsidian.AppImage https://github.com/obsidianmd/obsidian-releases/releases/download/v${RELEASE_VERSION}/Obsidian-${RELEASE_VERSION}.AppImage
+wget -qnv --show-progress -O ${TEMP_DIR}/Obsidian.png https://forum.obsidian.md/uploads/default/original/2X/7/7d2b71c58ded80e1dd507918089f582286b3540d.png
 
 #-----------------------------------------------------
-print 'Installing Obsidianmd...'
-# Delete previous version (in future versions Obsidianmd.desktop shouldn't exist)
-rm -f ~/.Obsidianmd/*.AppImage ~/.local/share/applications/Obsidianmd.desktop ~/.Obsidianmd/VERSION
+print 'Installing Obsidian...'
+# Delete previous version (in future versions Obsidian.desktop shouldn't exist)
+rm -f ~/.Obsidian/*.AppImage ~/.local/share/applications/Obsidian.desktop ~/.Obsidian/VERSION
 
 # Creates the folder where the binary will be stored
-mkdir -p ~/.Obsidianmd/
+mkdir -p ~/.Obsidian/
 
 # Download the latest version
-mv ${TEMP_DIR}/Obsidianmd.AppImage ~/.Obsidianmd/Obsidianmd.AppImage
+mv ${TEMP_DIR}/Obsidian.AppImage ~/.Obsidian/Obsidian.AppImage
 
 # Gives execution privileges
-chmod +x ~/.Obsidianmd/Obsidianmd.AppImage
+chmod +x ~/.Obsidian/Obsidian.AppImage
 
 print "${COLOR_GREEN}OK${COLOR_RESET}"
 
 #-----------------------------------------------------
 print 'Installing icon...'
 mkdir -p ~/.local/share/icons/hicolor/512x512/apps
-mv ${TEMP_DIR}/Obsidianmd.png ~/.local/share/icons/hicolor/512x512/apps/Obsidianmd.png
+mv ${TEMP_DIR}/Obsidian.png ~/.local/share/icons/hicolor/512x512/apps/Obsidian.png
 print "${COLOR_GREEN}OK${COLOR_RESET}"
 
 # Detect desktop environment
@@ -160,15 +162,15 @@ then
     : "${TMPDIR:=$TEMP_DIR}"
     # This command extracts to squashfs-root by default and can't be changed...
     # So we run it in the tmp directory and clean up after ourselves
-    (cd $TMPDIR && ~/.Obsidianmd/Obsidianmd.AppImage --appimage-extract Obsidianmd.desktop &> /dev/null)
-    APPIMAGE_VERSION=$(grep "^X-AppImage-Version=" $TMPDIR/squashfs-root/Obsidianmd.desktop | head -n 1 | cut -d "=" -f 2)
+    (cd $TMPDIR && ~/.Obsidian/Obsidian.AppImage --appimage-extract Obsidian.desktop &> /dev/null)
+    APPIMAGE_VERSION=$(grep "^X-AppImage-Version=" $TMPDIR/squashfs-root/Obsidian.desktop | head -n 1 | cut -d "=" -f 2)
     rm -rf $TMPDIR/squashfs-root
     # Only delete the desktop file if it will be replaced
-    rm -f ~/.local/share/applications/appimagekit-Obsidianmd.desktop
+    rm -f ~/.local/share/applications/appimagekit-Obsidian.desktop
 
     # On some systems this directory doesn't exist by default
     mkdir -p ~/.local/share/applications
-    echo -e "[Desktop Entry]\nEncoding=UTF-8\nName=Obsidianmd\nComment=Obsidianmd for Desktop\nExec=${HOME}/.Obsidianmd/Obsidianmd.AppImage\nIcon=Obsidianmd\nStartupWMClass=Obsidianmd\nType=Application\nCategories=Office;\n#${APPIMAGE_VERSION}" >> ~/.local/share/applications/appimagekit-Obsidianmd.desktop
+    echo -e "[Desktop Entry]\nEncoding=UTF-8\nName=Obsidian\nComment=Obsidian for Desktop\nExec=${HOME}/.Obsidian/Obsidian.AppImage\nIcon=Obsidian\nStartupWMClass=Obsidian\nType=Application\nCategories=Office;\n#${APPIMAGE_VERSION}" >> ~/.local/share/applications/appimagekit-Obsidian.desktop
     # Update application icons
     [[ `command -v update-desktop-database` ]] && update-desktop-database ~/.local/share/applications && update-desktop-database ~/.local/share/icons
     print "${COLOR_GREEN}OK${COLOR_RESET}"
@@ -181,10 +183,10 @@ fi
 #-----------------------------------------------------
 
 # Informs the user that it has been installed
-print "${COLOR_GREEN}Obsidianmd version${COLOR_RESET} ${RELEASE_VERSION} ${COLOR_GREEN}installed.${COLOR_RESET}"
+print "${COLOR_GREEN}Obsidian version${COLOR_RESET} ${RELEASE_VERSION} ${COLOR_GREEN}installed.${COLOR_RESET}"
 
 # Record version
-echo $RELEASE_VERSION > ~/.Obsidianmd/VERSION
+echo $RELEASE_VERSION > ~/.Obsidian/VERSION
 
 #-----------------------------------------------------
 if [[ "$SHOW_CHANGELOG" == true ]]; then
