@@ -1,5 +1,6 @@
 FROM jlesage/baseimage-gui:ubuntu-18.04
 
+RUN apt-get update && apt-get install -y wget
 RUN useradd --shell /sbin/nologin --home /app --uid 1000  -G users appuser
 RUN mkdir /app && chown appuser -Rfv /app
 USER appuser
