@@ -9,7 +9,7 @@ Basically, here is a docker-compose exmaple of how to use it :
 ```
 version: '2'
 services:
-  mqttExplorer:
+  obsidianmd:
     image: CatalinGB/docker-Obsidianmd
     environment:
       - VNC_PASSWORD=<yourVNCpassword>
