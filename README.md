@@ -14,7 +14,7 @@ services:
     environment:
       - VNC_PASSWORD=<yourVNCpassword>
     volumes:
-      - <yourdockervolume>:/app/.config:rw
+      - <yourdockervolume>:/config/xdg/config/obsidian:rw
       - <yournotesvolume>:/media/notes:rw
     ports:
       - 5800:5800
