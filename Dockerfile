@@ -12,6 +12,6 @@ RUN /app/.Obsidian/Obsidian.AppImage --appimage-extract
 ENV APPDIR=/app/squashfs-root
 ADD startapp.sh /startapp.sh
 USER root
-ADD https://forum.obsidian.md/uploads/default/original/2X/7/7d2b71c58ded80e1dd507918089f582286b3540d.png /app/Obsidianmd-logo.png
-RUN APP_ICON_URL=file:///app/Obsidianmd-logo.png && install_app_icon.sh "$APP_ICON_URL"
+# ADD https://forum.obsidian.md/uploads/default/original/2X/7/7d2b71c58ded80e1dd507918089f582286b3540d.png /app/Obsidianmd-logo.png
+# RUN APP_ICON_URL=file:///app/Obsidianmd-logo.png && install_app_icon.sh "$APP_ICON_URL"
 ENV APP_NAME="Obsidian.md"
